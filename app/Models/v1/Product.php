@@ -6,11 +6,12 @@ use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 use Illuminate\Database\Eloquent\Model;
 use Dyrynda\Database\Support\GeneratesUuid;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Product extends Model
 {
-    use HasFactory, HasSlug, GeneratesUuid;
+    use HasFactory, HasSlug, GeneratesUuid, SoftDeletes;
 
     protected $fillable = [
         'uuid',
