@@ -18,7 +18,6 @@ class User extends Model
         'email',
         'password',
         'email_verified_at',
-        'password',
         'avatar',
         'address',
         'phone_number',

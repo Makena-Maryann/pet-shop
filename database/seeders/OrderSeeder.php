@@ -2,8 +2,10 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\v1\User;
 use Illuminate\Database\Seeder;
+use Database\Factories\V1\OrderFactory;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class OrderSeeder extends Seeder
 {
@@ -12,6 +14,8 @@ class OrderSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        User::whereNot('is_admin', true)->get()->each(function ($user) {
+            $user->orders()->saveMany(OrderFactory::times(5)->make());
+        });
     }
 }

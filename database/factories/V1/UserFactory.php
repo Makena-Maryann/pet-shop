@@ -17,7 +17,16 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'first_name' => $this->faker->firstName,
+            'last_name' => $this->faker->lastName,
+            'is_admin' => false,
+            'email' => $this->faker->unique()->safeEmail,
+            'password' => bcrypt('userpassword'),
+            'email_verified_at' => now(),
+            'avatar' => $this->faker->uuid(),
+            'address' => $this->faker->address,
+            'phone_number' => $this->faker->phoneNumber,
+            'is_marketing' => false,
         ];
     }
 }
