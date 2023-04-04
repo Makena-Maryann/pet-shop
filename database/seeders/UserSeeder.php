@@ -25,6 +25,6 @@ class UserSeeder extends Seeder
             'is_marketing' => true,
         ]);
 
-        User::factory()->count(10)->create();
+        User::factory()->count(20)->create();
     }
 }

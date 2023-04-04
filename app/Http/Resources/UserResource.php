@@ -25,7 +25,6 @@ class UserResource extends JsonResource
             'is_marketing' => $this->is_marketing,
             'updated_at' => $this->updated_at,
             'created_at' => $this->created_at,
-            'last_login_at' => $this->last_login_at,
             // 'token' => $this->createToken('api')->accessToken,
         ];
     }

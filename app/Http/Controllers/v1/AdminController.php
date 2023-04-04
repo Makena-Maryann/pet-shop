@@ -27,6 +27,7 @@ class AdminController extends Controller
      */
     public function userListing()
     {
+        //TODO: All listing endpoints most include a paginated response and include these basic filters:Page, limit, sort by, desc
         $users = User::where('is_admin', false)->paginate(5)->toArray();
 
         return response()->json([
@@ -39,7 +40,13 @@ class AdminController extends Controller
      */
     public function store(StoreUserRequest $request)
     {
-        // Create a new admin account
+        $user = User::create(array_merge($request->validated(), ['is_admin' => true]));
+
+        return response()->json([
+            'success' => 1,
+            //add token
+            'data' => new UserResource($user),
+        ], Response::HTTP_CREATED);
     }
 
     /**
