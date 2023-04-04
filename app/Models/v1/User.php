@@ -26,13 +26,37 @@ class User extends Model
         'remember_token',
     ];
 
-    protected $casts = [
-        'is_admin' => 'boolean',
-        'is_marketing' => 'boolean',
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array<int, string>
+     */
+    protected $hidden = [
+        'id',
+        'is_admin',
+        'password',
+        'remember_token',
     ];
 
     public function orders()
     {
         return $this->hasMany(Order::class);
+    }
+
+    /**
+     * Get the route key for the model.
+     */
+    public function getRouteKeyName(): string
+    {
+        return 'uuid';
+    }
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($user) {
+            $user->password = bcrypt($user->password);
+        });
     }
 }
