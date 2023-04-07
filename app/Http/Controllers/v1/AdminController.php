@@ -4,6 +4,7 @@ namespace App\Http\Controllers\v1;
 
 use App\Models\v1\User;
 use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use App\Http\Requests\StoreUserRequest;
@@ -25,7 +26,7 @@ class AdminController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function userListing()
+    public function userListing(): JsonResponse
     {
         //TODO: All listing endpoints most include a paginated response and include these basic filters:Page, limit, sort by, desc
         $users = User::where('is_admin', false)->paginate(5)->toArray();
@@ -38,7 +39,7 @@ class AdminController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreUserRequest $request)
+    public function store(StoreUserRequest $request): JsonResponse
     {
         $user = User::create(array_merge($request->validated(), ['is_admin' => true]));
 
@@ -46,6 +47,10 @@ class AdminController extends Controller
             'success' => 1,
             //add token
             'data' => new UserResource($user),
+            'message' => 'User created successfully',
+            'error' => '',
+            'errors' => [],
+            'trace' => '',
         ], Response::HTTP_CREATED);
     }
 

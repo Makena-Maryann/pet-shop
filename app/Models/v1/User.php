@@ -4,6 +4,7 @@ namespace App\Models\v1;
 
 use Illuminate\Database\Eloquent\Model;
 use Dyrynda\Database\Support\GeneratesUuid;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class User extends Model
@@ -38,7 +39,7 @@ class User extends Model
         'remember_token',
     ];
 
-    public function orders()
+    public function orders(): HasMany
     {
         return $this->hasMany(Order::class);
     }
@@ -51,7 +52,7 @@ class User extends Model
         return 'uuid';
     }
 
-    public static function boot()
+    public static function boot(): void
     {
         parent::boot();
 
