@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\EnsureTokenIsValid;
 use App\Http\Controllers\Api\v1\UserController;
 use App\Http\Controllers\Api\v1\AdminController;
 use App\Http\Controllers\Api\v1\OrderController;
@@ -19,24 +20,17 @@ use App\Http\Controllers\Api\v1\OrderStatusController;
 |
 */
 
-Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
-    return $request->user();
-});
-
 Route::prefix('v1')->group(function () {
     Route::controller(AdminController::class)->prefix('admin')->name('admin.')->group(function () {
         Route::post('login', 'login')->name('login');
         Route::post('logout', 'logout')->name('logout');
-        Route::post('create', 'store')->name('create');
-        Route::get('user-listing', 'userListing')->name('user-listing');
-        Route::put('user-edit/{user}', 'userEdit')->name('user-edit');
-        Route::delete('user-delete/{user}', 'userDelete')->name('user-delete');
 
-        // Route::middleware(['auth:admin'])->group(function () {
-        //     Route::get('user-listing', 'userListing')->name('user-listing');
-        //     Route::put('user-edit/{uuid}', 'userEdit')->name('user-edit');
-        //     Route::delete('user-delete/{uuid}', 'userDelete')->name('user-delete');
-        // });
+        Route::middleware('auth.token')->group(function () {
+            Route::post('create', 'store')->name('create');
+            Route::get('user-listing', 'userListing')->name('user-listing');
+            Route::put('user-edit/{uuid}', 'userEdit')->name('user-edit');
+            Route::delete('user-delete/{uuid}', 'userDelete')->name('user-delete');
+        });
     });
 
     Route::apiResources([
