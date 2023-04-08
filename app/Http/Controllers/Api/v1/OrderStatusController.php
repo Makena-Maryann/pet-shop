@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\v1;
+namespace App\Http\Controllers\Api\v1;
 
+use App\Models\v1\OrderStatus;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StorePaymentRequest;
-use App\Http\Requests\UpdatePaymentRequest;
-use App\Models\v1\Payment;
+use App\Http\Requests\StoreOrderStatusRequest;
+use App\Http\Requests\UpdateOrderStatusRequest;
 
-class PaymentController extends Controller
+class OrderStatusController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -20,7 +20,7 @@ class PaymentController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StorePaymentRequest $request)
+    public function store(StoreOrderStatusRequest $request)
     {
         //
     }
@@ -28,7 +28,7 @@ class PaymentController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Payment $payment)
+    public function show(OrderStatus $orderStatus)
     {
         //
     }
@@ -36,7 +36,7 @@ class PaymentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdatePaymentRequest $request, Payment $payment)
+    public function update(UpdateOrderStatusRequest $request, OrderStatus $orderStatus)
     {
         //
     }
@@ -44,7 +44,7 @@ class PaymentController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Payment $payment)
+    public function destroy(OrderStatus $orderStatus)
     {
         //
     }
