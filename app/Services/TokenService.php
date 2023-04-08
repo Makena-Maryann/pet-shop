@@ -24,36 +24,42 @@ use Lcobucci\JWT\Validation\Constraint\HasClaimWithValue;
 
 class TokenService
 {
-    private $issuer;
+    private $url;
     private $privateKey;
     private $publicKey;
-    private $userUuid;
     private $uniqueId;
+    private $userUuid;
+    private $algorithm;
+    private $expiresAt;
+    private $issuedAt;
+    private $canOnlyBeUsedAfter;
 
-    public function __construct(string $issuer, InMemory $privateKey, InMemory $publicKey, string $uniqueId)
+    public function __construct(string $url, InMemory $privateKey, InMemory $publicKey, Sha256 $algorithm, DateTimeImmutable $expiresAt, DateTimeImmutable $issuedAt, DateTimeImmutable $canOnlyBeUsedAfter)
     {
-        $this->issuer = $issuer;
+        $this->url = $url;
         $this->privateKey = $privateKey;
         $this->publicKey = $publicKey;
-        $this->uniqueId = $uniqueId;
+        $this->algorithm = $algorithm;
+        $this->expiresAt = $expiresAt;
+        $this->issuedAt = $issuedAt;
+        $this->canOnlyBeUsedAfter = $canOnlyBeUsedAfter;
     }
 
-    public function generateToken(string $userUuid): string
+    public function generateToken(string $userUuid, string $uniqueId): string
     {
         $this->userUuid = $userUuid;
+        $this->uniqueId = $uniqueId;
         $builder = (new Builder(new JoseEncoder(), ChainedFormatter::default()));
-        $algorithm = new Sha256();
-        $now   = new DateTimeImmutable();
 
         $token = $builder
-            ->issuedBy($this->issuer)
-            ->permittedFor($this->issuer)
-            ->identifiedBy($this->uniqueId)
-            ->issuedAt($now)
-            ->canOnlyBeUsedAfter($now)
-            ->expiresAt($now->modify('+2 hours'))
+            ->issuedBy($this->url)
+            ->permittedFor($this->url)
+            ->identifiedBy($uniqueId)
+            ->issuedAt($this->issuedAt)
+            ->canOnlyBeUsedAfter($this->canOnlyBeUsedAfter)
+            ->expiresAt($this->expiresAt)
             ->withClaim('uuid', $userUuid)
-            ->getToken($algorithm, $this->privateKey);
+            ->getToken($this->algorithm, $this->privateKey);
 
         return $token->toString();
     }
@@ -70,22 +76,22 @@ class TokenService
 
         assert($token instanceof UnencryptedToken);
 
-        if (!$this->validateToken($token)) {
+        if (!$this->validateToken($token, $this->uniqueId)) {
             return null;
         }
 
         return $token->claims()->get('uuid');
     }
 
-    private function validateToken(UnencryptedToken $token): bool
+    private function validateToken(UnencryptedToken $token, string $uniqueId): bool
     {
         $validator = new Validator();
 
         $constraints = [
-            new IssuedBy($this->issuer),
+            new IssuedBy($this->url),
             new SignedWith(new Sha256(), $this->publicKey),
             new HasClaimWithValue('uuid', $this->userUuid),
-            new IdentifiedBy($this->uniqueId),
+            new IdentifiedBy($uniqueId),
             new StrictValidAt(new Clock, new DateInterval('PT1M')),
         ];
 

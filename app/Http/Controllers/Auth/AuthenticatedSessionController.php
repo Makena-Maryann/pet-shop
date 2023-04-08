@@ -9,7 +9,6 @@ use App\Services\TokenService;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use Lcobucci\JWT\Signer\Key\InMemory;
 use App\Http\Requests\Auth\LoginRequest;
 
 class AuthenticatedSessionController extends Controller
@@ -17,35 +16,34 @@ class AuthenticatedSessionController extends Controller
     /**
      * Handle an incoming authentication request.
      */
-    public function store(LoginRequest  $request): JsonResponse
+    public function store(LoginRequest $request, TokenService $tokenService): JsonResponse
     {
         $request->authenticate();
 
         $user = $request->user();
-        $expiresAt = now()->addHours(2);
-        $now = now();
         $uniqueId = bin2hex(random_bytes(8));
+        $token = $tokenService->generateToken($user->uuid, $uniqueId);
 
-        $tokenService = new TokenService(
-            config('app.url'),
-            InMemory::file(__DIR__ . '/../../../../private.pem'),
-            InMemory::file(__DIR__ . '/../../../../public.pem'),
-            $uniqueId
-        );
+        try {
+            $this->createOrUpdateJwtToken($user, $uniqueId);
+        } catch (\Exception $e) {
+            return response()->json(['success' => 0, 'message' => $e->getMessage()], 500);
+        }
 
-        $token = $tokenService->generateToken($user->uuid);
+        return response()->json(['success' => 1, 'token' => $token]);
+    }
 
+    private function createOrUpdateJwtToken($user, $uniqueId)
+    {
         JwtToken::updateOrCreate([
             'user_id' => $user->id,
         ], [
             'unique_id' => $uniqueId,
             'token_title' => 'Auth Token',
-            'expires_at' => $expiresAt,
-            'last_used_at' => $now,
-            'refreshed_at' => $now,
+            'expires_at' => now()->addMinutes(config('jwt.expires_at')),
+            'last_used_at' => now(),
+            'refreshed_at' => now(),
         ]);
-
-        return response()->json(['success' => 1, 'token' => $token]);
     }
 
     /**
