@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\v1\AdminController;
 use App\Http\Controllers\Api\v1\OrderController;
 use App\Http\Controllers\Api\v1\PaymentController;
 use App\Http\Controllers\Api\v1\OrderStatusController;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,16 +22,19 @@ use App\Http\Controllers\Api\v1\OrderStatusController;
 */
 
 Route::prefix('v1')->group(function () {
-    Route::controller(AdminController::class)->prefix('admin')->name('admin.')->group(function () {
-        Route::post('login', 'login')->name('login');
-        Route::post('logout', 'logout')->name('logout');
+    Route::controller(AuthenticatedSessionController::class)->group(function () {
+        Route::post('admin/login', 'store')->name('admin.login');
+        Route::post('admin/logout', 'destroy')->name('admin.logout');
+        Route::post('user/login', 'store')->name('user.login');
+        Route::post('user/logout', 'destroy')->name('user.logout');
+    });
 
-        Route::middleware('auth.token')->group(function () {
-            Route::post('create', 'store')->name('create');
-            Route::get('user-listing', 'userListing')->name('user-listing');
-            Route::put('user-edit/{uuid}', 'userEdit')->name('user-edit');
-            Route::delete('user-delete/{uuid}', 'userDelete')->name('user-delete');
-        });
+    // Route::middleware('auth.token')->controller(AdminController::class)->prefix('admin')->name('admin.')->group(function () {
+    Route::controller(AdminController::class)->prefix('admin')->name('admin.')->group(function () {
+        Route::post('create', 'store')->name('create');
+        Route::get('user-listing', 'userListing')->name('user-listing');
+        Route::put('user-edit/{uuid}', 'userEdit')->name('user-edit');
+        Route::delete('user-delete/{uuid}', 'userDelete')->name('user-delete');
     });
 
     Route::apiResources([
