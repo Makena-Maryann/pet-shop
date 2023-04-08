@@ -44,6 +44,11 @@ class User extends Model
         return $this->hasMany(Order::class);
     }
 
+    public function tokens(): HasMany
+    {
+        return $this->hasMany(JwtToken::class, 'user_id');
+    }
+
     /**
      * Get the route key for the model.
      */
