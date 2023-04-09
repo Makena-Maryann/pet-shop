@@ -27,7 +27,7 @@ class AuthenticationTest extends TestCase
         $this->tokenVerifier = $this->app->make(TokenVerifier::class);
     }
 
-    public function test_users_cannot_authenticate_with_invalid_password()
+    public function test_users_cannot_authenticate_with_invalid_password(): void
     {
         $user = User::factory()->create([
             'password' => 'password',
@@ -47,7 +47,7 @@ class AuthenticationTest extends TestCase
             ]);
     }
 
-    public function test_user_password_remains_the_same_for_seeded_users()
+    public function test_user_password_remains_the_same_for_seeded_users(): void
     {
         $users = User::factory()->count(2)->create();
 
@@ -56,7 +56,7 @@ class AuthenticationTest extends TestCase
         });
     }
 
-    public function test_can_authenticate_a_user_and_return_a_token()
+    public function test_can_authenticate_a_user_and_return_a_token(): void
     {
         $user = User::factory()->create();
 
@@ -74,7 +74,7 @@ class AuthenticationTest extends TestCase
             ]);
     }
 
-    public function test_generated_token_unique_id_is_stored_in_jwt_tokens_table()
+    public function test_generated_token_unique_id_is_stored_in_jwt_tokens_table(): void
     {
         $user = User::factory()->create();
 
@@ -97,7 +97,7 @@ class AuthenticationTest extends TestCase
         $this->assertNotNull($jwtToken);
     }
 
-    public function test_can_destroy_an_authenticated_session()
+    public function test_can_destroy_an_authenticated_session(): void
     {
         $user = User::factory()->create();
 

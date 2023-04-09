@@ -28,7 +28,7 @@ class AuthorizationTest extends TestCase
         $this->withoutExceptionHandling();
     }
 
-    public function test_user_cannot_access_protected_routes_without_token()
+    public function test_user_cannot_access_protected_routes_without_token(): void
     {
         $user = User::factory()->create();
 
@@ -40,7 +40,7 @@ class AuthorizationTest extends TestCase
             ]);
     }
 
-    public function test_user_cannot_access_protected_routes_when_user_uuid_is_missing()
+    public function test_user_cannot_access_protected_routes_when_user_uuid_is_missing(): void
     {
         $token = $this->tokenGenerator->generateToken(1);
 
@@ -54,7 +54,7 @@ class AuthorizationTest extends TestCase
             ]);
     }
 
-    public function test_user_cannot_access_protected_routes_when_token_belongs_to_non_existent_user()
+    public function test_user_cannot_access_protected_routes_when_token_belongs_to_non_existent_user(): void
     {
         $token = $this->tokenGenerator->generateToken('1');
 
@@ -68,7 +68,7 @@ class AuthorizationTest extends TestCase
             ]);
     }
 
-    public function test_user_cannot_access_admin_routes_without_admin_role()
+    public function test_user_cannot_access_admin_routes_without_admin_role(): void
     {
         $user = User::factory()->create();
 
@@ -84,7 +84,7 @@ class AuthorizationTest extends TestCase
             ]);
     }
 
-    public function test_user_cannot_access_protected_routes_after_logout()
+    public function test_user_cannot_access_protected_routes_after_logout(): void
     {
         $user = User::factory()->create();
 
@@ -104,7 +104,7 @@ class AuthorizationTest extends TestCase
             ]);
     }
 
-    public function test_user_can_access_protected_routes_with_valid_token()
+    public function test_user_can_access_protected_routes_with_valid_token(): void
     {
         $user = User::factory()->create([
             'is_admin' => true,

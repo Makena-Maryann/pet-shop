@@ -30,6 +30,11 @@ class TokenVerification implements TokenVerifier
         $this->url = $url;
         $this->publicKey = $publicKey;
         $this->algorithm = $algorithm;
+        $this->setClock($clock);
+    }
+
+    public function setClock(ClockInterface $clock)
+    {
         $this->clock = $clock;
     }
 
