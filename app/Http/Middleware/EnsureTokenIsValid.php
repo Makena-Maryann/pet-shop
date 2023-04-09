@@ -40,6 +40,10 @@ class EnsureTokenIsValid
 
         $user = User::where('uuid', $userUuid)->first();
 
+        if (!$user) {
+            return response()->json(['message' => 'Unauthorized: User not found'], 401);
+        }
+
         if ($guard == 'admin' && !$user->is_admin) {
             return response()->json(['message' => 'Unauthorized: Not enough privileges'], 401);
         }

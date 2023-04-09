@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\Auth;
 
-use Carbon\Carbon;
 use Tests\TestCase;
 use App\Models\v1\User;
 use App\Models\v1\JwtToken;
@@ -28,7 +27,7 @@ class AuthenticationTest extends TestCase
         $this->tokenVerifier = $this->app->make(TokenVerifier::class);
     }
 
-    public function test_users_can_not_authenticate_with_invalid_password()
+    public function test_users_cannot_authenticate_with_invalid_password()
     {
         $user = User::factory()->create([
             'password' => 'password',
@@ -103,7 +102,6 @@ class AuthenticationTest extends TestCase
         $user = User::factory()->create();
 
         $token = $this->tokenGenerator->generateToken($user->uuid);
-        $unencryptedToken = $this->tokenVerifier->verifyToken($token);
 
         $this->actingAs($user);
 
