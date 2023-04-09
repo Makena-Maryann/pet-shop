@@ -5,16 +5,16 @@ namespace App\Http\Middleware;
 use Closure;
 use App\Models\v1\User;
 use Illuminate\Http\Request;
-use App\Services\TokenService;
+use App\Services\Jwt\Interfaces\TokenVerifier;
 use Symfony\Component\HttpFoundation\Response;
 
 class EnsureTokenIsValid
 {
-    private $tokenService;
+    private $tokenVerifier;
 
-    public function __construct(TokenService $tokenService)
+    public function __construct(TokenVerifier $tokenVerifier)
     {
-        $this->tokenService = $tokenService;
+        $this->tokenVerifier = $tokenVerifier;
     }
 
     /**
@@ -30,7 +30,7 @@ class EnsureTokenIsValid
             return response()->json(['message' => 'Unauthorized'], 401);
         }
 
-        $userUuid = $this->tokenService->verifyToken($token);
+        $userUuid = $this->tokenVerifier->verifyToken($token);
 
         if (!$userUuid) {
             return response()->json(['message' => 'Unauthorized'], 401);
