@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use App\Models\v1\User;
+use App\Models\v1\JwtToken;
 use Illuminate\Http\Request;
 use App\Services\Jwt\Interfaces\TokenVerifier;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,7 +31,8 @@ class EnsureTokenIsValid
             return response()->json(['message' => 'Unauthorized'], 401);
         }
 
-        $userUuid = $this->tokenVerifier->verifyToken($token);
+        $unencryptedToken = $this->tokenVerifier->verifyToken($token);
+        $userUuid = $unencryptedToken->claims()->get('uuid');
 
         if (!$userUuid) {
             return response()->json(['message' => 'Unauthorized'], 401);
@@ -40,6 +42,16 @@ class EnsureTokenIsValid
 
         if ($guard == 'admin' && !$user->is_admin) {
             return response()->json(['message' => 'Unauthorized: Not enough privileges'], 401);
+        }
+
+        $accessToken = JwtToken::where([
+            ['user_id', $user->id],
+            ['unique_id', $unencryptedToken->claims()->get('jti')],
+            ['expires_at', '>', now()]
+        ])->first();
+
+        if (!$accessToken) {
+            return response()->json(['message' => 'Unauthorized: Token is Expired'], 401);
         }
 
         $request->setUserResolver(function () use ($user) {

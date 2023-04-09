@@ -4,5 +4,5 @@ namespace App\Services\Jwt\Interfaces;
 
 interface TokenGenerator
 {
-    public function generateToken(string $userUuid, string $uniqueId): string;
+    public function generateToken(string $userUuid): string;
 }

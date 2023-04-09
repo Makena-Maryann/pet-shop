@@ -15,6 +15,9 @@ return [
     //The algorithm used to sign the JWT
     'algorithm' => env('JWT_ALGORITHM', new Sha256()),
 
+    //The unique ID of the JWT
+    'unique_id' => env('JWT_UNIQUE_ID', bin2hex(random_bytes(8))),
+
     //The expiration time of the JWT
     'expires_at' => env('JWT_EXPIRES_AT', 120),
 

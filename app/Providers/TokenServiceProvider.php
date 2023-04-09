@@ -23,6 +23,7 @@ class TokenServiceProvider extends ServiceProvider
                 config('jwt.url'),
                 InMemory::file(config('jwt.private_key_path')),
                 config('jwt.algorithm'),
+                config('jwt.unique_id'),
                 Carbon::now()->addMinutes(config('jwt.expires_at'))->toDateTimeImmutable(),
                 Carbon::now()->addMinutes(config('issued_at'))->toDateTimeImmutable(),
                 Carbon::now()->addMinutes(config('used_after'))->toDateTimeImmutable(),

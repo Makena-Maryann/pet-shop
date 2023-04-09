@@ -33,7 +33,7 @@ class TokenVerification implements TokenVerifier
         $this->clock = $clock;
     }
 
-    public function verifyToken(string $jwt): ?string
+    public function verifyToken(string $jwt): ?UnencryptedToken
     {
         $parser = new Parser(new JoseEncoder());
 
@@ -49,7 +49,7 @@ class TokenVerification implements TokenVerifier
             return null;
         }
 
-        return $token->claims()->get('uuid');
+        return $token;
     }
 
     private function validateToken(UnencryptedToken $token): bool

@@ -15,28 +15,37 @@ class TokenGeneration implements TokenGenerator
     private $url;
     private $privateKey;
     private $algorithm;
+    private $uniqueId;
     private $expiresAt;
     private $issuedAt;
     private $canOnlyBeUsedAfter;
 
-    public function __construct(string $url, InMemory $privateKey, Sha256 $algorithm, DateTimeImmutable $expiresAt, DateTimeImmutable $issuedAt, DateTimeImmutable $canOnlyBeUsedAfter)
-    {
+    public function __construct(
+        string $url,
+        InMemory $privateKey,
+        Sha256 $algorithm,
+        string $uniqueId,
+        DateTimeImmutable $expiresAt,
+        DateTimeImmutable $issuedAt,
+        DateTimeImmutable $canOnlyBeUsedAfter
+    ) {
         $this->url = $url;
         $this->privateKey = $privateKey;
         $this->algorithm = $algorithm;
+        $this->uniqueId = $uniqueId;
         $this->expiresAt = $expiresAt;
         $this->issuedAt = $issuedAt;
         $this->canOnlyBeUsedAfter = $canOnlyBeUsedAfter;
     }
 
-    public function generateToken(string $userUuid, string $uniqueId): string
+    public function generateToken(string $userUuid): string
     {
         $builder = (new Builder(new JoseEncoder(), ChainedFormatter::default()));
 
         $token = $builder
             ->issuedBy($this->url)
             ->permittedFor($this->url)
-            ->identifiedBy($uniqueId)
+            ->identifiedBy($this->uniqueId)
             ->issuedAt($this->issuedAt)
             ->canOnlyBeUsedAfter($this->canOnlyBeUsedAfter)
             ->expiresAt($this->expiresAt)
