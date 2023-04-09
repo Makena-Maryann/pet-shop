@@ -22,7 +22,7 @@ class EnsureTokenIsValid
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, Closure $next, $guard = null): Response
     {
         $token = $request->bearerToken();
 
@@ -36,8 +36,14 @@ class EnsureTokenIsValid
             return response()->json(['message' => 'Unauthorized'], 401);
         }
 
-        $request->setUserResolver(function () use ($userUuid) {
-            return User::where('uuid', $userUuid)->first();
+        $user = User::where('uuid', $userUuid)->first();
+
+        if ($guard == 'admin' && !$user->is_admin) {
+            return response()->json(['message' => 'Unauthorized: Not enough privileges'], 401);
+        }
+
+        $request->setUserResolver(function () use ($user) {
+            return $user;
         });
 
         return $next($request);
