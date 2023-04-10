@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Auth;
 use Carbon\Carbon;
 use App\Models\v1\JwtToken;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -25,9 +24,44 @@ class AuthenticatedSessionController extends Controller
     }
 
     /**
-     * Handle an incoming authentication request.
+     * @OA\Post(
+     *     path="/api/v1/admin/login",
+     *     operationId="loginAdmin",
+     *      tags={"Admin"},
+     *      summary="Login an Admin account",
+     *      description="Logs in an Admin account and returns a JWT token",
+     *      @OA\RequestBody(
+     *          required=true,
+     *          @OA\MediaType(
+     *              mediaType="application/x-www-form-urlencoded",
+     *              @OA\Schema(
+     *                  ref="#/components/schemas/LoginRequest"
+     *              )
+     *          )
+     *     ),
+     *     @OA\Response(
+     *          response=200,
+     *          description="OK",
+     *       ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthorized",
+     *      ),
+     *      @OA\Response(
+     *          response=404,
+     *          description="Page Not Found"
+     *      ),
+     *      @OA\Response(
+     *          response=422,
+     *          description="Unprocessable Entity"
+     *      ),
+     *      @OA\Response(
+     *          response=500,
+     *          description="Internal Server Error"
+     *      ),
+     * )
      */
-    public function store(LoginRequest $request): JsonResponse
+    public function loginAdmin(LoginRequest $request): JsonResponse
     {
         $request->authenticate();
 
@@ -62,27 +96,162 @@ class AuthenticatedSessionController extends Controller
     }
 
     /**
-     * Destroy an authenticated session.
+     * @OA\Post(
+     *     path="/api/v1/admin/logout",
+     *     operationId="logoutAdmin",
+     *      tags={"Admin"},
+     *      summary="Logout an Admin account",
+     *      description="Logs out an Admin account and invalidates the JWT token",
+     *     @OA\Response(
+     *          response=200,
+     *          description="OK",
+     *       ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthorized",
+     *      ),
+     *      @OA\Response(
+     *          response=404,
+     *          description="Page Not Found"
+     *      ),
+     *      @OA\Response(
+     *          response=422,
+     *          description="Unprocessable Entity"
+     *      ),
+     *      @OA\Response(
+     *          response=500,
+     *          description="Internal Server Error"
+     *      ),
+     * )
      */
-    public function destroy(Request $request): JsonResponse
+    public function logoutAdmin(Request $request): JsonResponse
     {
         $token = $request->bearerToken();
-        $authToken = $this->tokenVerifier->verifyToken($token);
-        $uniqueId = $authToken->claims()->get('jti');
 
-        $accessToken = JwtToken::where('unique_id', $uniqueId)->first();
+        if ($token) {
+            $authToken = $this->tokenVerifier->verifyToken($token);
 
-        if ($accessToken) {
-            $accessToken->update([
-                'expires_at' => Carbon::now(),
-            ]);
+            $uniqueId = $authToken->claims()->get('jti');
+
+            $accessToken = JwtToken::where('unique_id', $uniqueId)->first();
+
+            if ($accessToken) {
+                $accessToken->update([
+                    'expires_at' => Carbon::now(),
+                ]);
+            }
         }
 
         Auth::logout();
 
-        return response()->json([
-            'success' => 1,
-            'data' => []
-        ], Response::HTTP_OK);
+        return \App\Helpers\customApiResponse(true);
+    }
+
+    /**
+     * @OA\Post(
+     *     path="/api/v1/user/login",
+     *     operationId="loginUser",
+     *      tags={"User"},
+     *      summary="Login a User account",
+     *      description="Logs in a User account and returns a JWT token",
+     *      @OA\RequestBody(
+     *          required=true,
+     *          @OA\MediaType(
+     *              mediaType="application/x-www-form-urlencoded",
+     *              @OA\Schema(
+     *                  ref="#/components/schemas/LoginRequest"
+     *              )
+     *          )
+     *     ),
+     *     @OA\Response(
+     *          response=200,
+     *          description="OK",
+     *       ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthorized",
+     *      ),
+     *      @OA\Response(
+     *          response=404,
+     *          description="Page Not Found"
+     *      ),
+     *      @OA\Response(
+     *          response=422,
+     *          description="Unprocessable Entity"
+     *      ),
+     *      @OA\Response(
+     *          response=500,
+     *          description="Internal Server Error"
+     *      ),
+     * )
+     */
+    public function loginUser(LoginRequest $request): JsonResponse
+    {
+        $request->authenticate();
+
+        $user = $request->user();
+        $token = $this->tokenGenerator->generateToken($user->uuid);
+
+        $unencryptedToken = $this->tokenVerifier->verifyToken($token);
+
+        try {
+            $this->createOrUpdateJwtToken($user, $unencryptedToken);
+        } catch (\Exception $e) {
+            return response()->json(['success' => 0, 'message' => $e->getMessage()], 500);
+        }
+
+        return \App\Helpers\customApiResponse(true, ['token' => $token]);
+    }
+
+    /**
+     * @OA\Post(
+     *     path="/api/v1/user/logout",
+     *     operationId="logoutUser",
+     *      tags={"User"},
+     *      summary="Logout a User account",
+     *      description="Logs out a User account and invalidates the JWT token",
+     *     @OA\Response(
+     *          response=200,
+     *          description="OK",
+     *       ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthorized",
+     *      ),
+     *      @OA\Response(
+     *          response=404,
+     *          description="Page Not Found"
+     *      ),
+     *      @OA\Response(
+     *          response=422,
+     *          description="Unprocessable Entity"
+     *      ),
+     *      @OA\Response(
+     *          response=500,
+     *          description="Internal Server Error"
+     *      ),
+     * )
+     */
+    public function logoutUser(Request $request): JsonResponse
+    {
+        $token = $request->bearerToken();
+
+        if ($token) {
+            $authToken = $this->tokenVerifier->verifyToken($token);
+
+            $uniqueId = $authToken->claims()->get('jti');
+
+            $accessToken = JwtToken::where('unique_id', $uniqueId)->first();
+
+            if ($accessToken) {
+                $accessToken->update([
+                    'expires_at' => Carbon::now(),
+                ]);
+            }
+        }
+
+        Auth::logout();
+
+        return \App\Helpers\customApiResponse(true);
     }
 }

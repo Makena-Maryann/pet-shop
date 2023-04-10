@@ -9,6 +9,23 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Validation\ValidationException;
 
+/**
+ * @OA\Schema(
+ *    schema="LoginRequest",
+ *    required={"email","password"},
+ *    @OA\Property(
+ *     property="email",
+ *     type="string",
+ *     description="Admin email",
+ *    ),
+ *    @OA\Property(
+ *     property="password",
+ *     type="string",
+ *     format="password",
+ *     description="Admin password",
+ *    ),
+ * )
+ */
 class LoginRequest extends FormRequest
 {
     /**
