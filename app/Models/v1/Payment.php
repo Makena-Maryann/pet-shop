@@ -5,6 +5,7 @@ namespace App\Models\v1;
 use Illuminate\Database\Eloquent\Model;
 use Dyrynda\Database\Support\GeneratesUuid;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Payment extends Model
@@ -21,9 +22,9 @@ class Payment extends Model
         'details' => 'array'
     ];
 
-    public function orders(): HasMany
+    public function order(): BelongsTo
     {
-        return $this->hasMany(Order::class);
+        return $this->belongsTo(Order::class);
     }
 
     public function getDetailsAttribute($value): array

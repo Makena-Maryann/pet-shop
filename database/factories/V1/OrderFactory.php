@@ -19,11 +19,6 @@ class OrderFactory extends Factory
     {
         return [
             'order_status_id' => $this->faker->numberBetween(1, 5),
-            'payment_id' => function (array $attributes) {
-                if ($attributes['order_status_id'] == 3 || $attributes['order_status_id'] == 4) {
-                    return $this->faker->numberBetween(1, 3);
-                }
-            },
             'products' => function () {
                 $products = Product::inRandomOrder()->take($this->faker->numberBetween(1, 5))->get();
                 return $products->map(function ($product) {
@@ -48,7 +43,11 @@ class OrderFactory extends Factory
             'delivery_fee' => function (array $attributes) {
                 return $attributes['amount'] > 500 ? 0 : 15;
             },
-            'shipped_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
+            'shipped_at' => function (array $attributes) {
+                if ($attributes['order_status_id'] == 4) {
+                    return $this->faker->dateTimeBetween('-1 year', 'now');
+                }
+            },
         ];
     }
 }

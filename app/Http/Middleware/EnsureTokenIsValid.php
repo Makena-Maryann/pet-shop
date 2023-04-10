@@ -32,6 +32,11 @@ class EnsureTokenIsValid
         }
 
         $unencryptedToken = $this->tokenVerifier->verifyToken($token);
+
+        if (!$unencryptedToken) {
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
+
         $userUuid = $unencryptedToken->claims()->get('uuid');
 
         if (!$userUuid) {

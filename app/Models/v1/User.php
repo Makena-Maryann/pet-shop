@@ -40,6 +40,15 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    /**
+     * Attributes that should be appended.
+     *
+     * @return string
+     */
+    protected $appends = [
+        'name',
+    ];
+
     public function orders(): HasMany
     {
         return $this->hasMany(Order::class);
@@ -48,6 +57,14 @@ class User extends Authenticatable
     public function tokens(): HasMany
     {
         return $this->hasMany(JwtToken::class, 'user_id');
+    }
+
+    /**
+     * Get the user's full name.
+     */
+    public function getNameAttribute(): string
+    {
+        return $this->first_name . ' ' . $this->last_name;
     }
 
     /**

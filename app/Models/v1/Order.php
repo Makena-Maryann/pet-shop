@@ -4,6 +4,7 @@ namespace App\Models\v1;
 
 use Illuminate\Database\Eloquent\Model;
 use Dyrynda\Database\Support\GeneratesUuid;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -38,8 +39,8 @@ class Order extends Model
         return $this->belongsTo(OrderStatus::class);
     }
 
-    public function payment(): BelongsTo
+    public function payment(): HasOne
     {
-        return $this->belongsTo(Payment::class);
+        return $this->hasOne(Payment::class);
     }
 }
