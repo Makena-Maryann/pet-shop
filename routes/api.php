@@ -32,8 +32,8 @@ Route::prefix('v1')->group(function () {
     Route::middleware('auth.token:admin')->controller(AdminController::class)->prefix('admin')->name('admin.')->group(function () {
         Route::post('create', 'store')->name('create');
         Route::get('user-listing', 'userListing')->name('user-listing');
-        Route::put('user-edit/{uuid}', 'userEdit')->name('user-edit');
-        Route::delete('user-delete/{uuid}', 'userDelete')->name('user-delete');
+        Route::put('user-edit/{user}', 'userEdit')->name('user-edit');
+        Route::delete('user-delete/{user}', 'userDelete')->name('user-delete');
     });
 
     Route::apiResources([

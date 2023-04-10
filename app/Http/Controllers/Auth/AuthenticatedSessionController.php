@@ -42,12 +42,7 @@ class AuthenticatedSessionController extends Controller
             return response()->json(['success' => 0, 'message' => $e->getMessage()], 500);
         }
 
-        return response()->json([
-            'success' => 1,
-            'data' => [
-                'token' => $token,
-            ]
-        ], Response::HTTP_OK);
+        return \App\Helpers\customApiResponse(true, ['token' => $token]);
     }
 
     private function createOrUpdateJwtToken($user, $unencryptedToken)
