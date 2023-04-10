@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Models\v1\User;
+use App\Filters\UserFilters;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
@@ -15,13 +17,13 @@ class AdminController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function userListing(): JsonResponse
+    public function userListing(Request $request): JsonResponse
     {
-        //TODO: All listing endpoints most include a paginated response and include these basic filters:Page, limit, sort by, desc
-        $users = User::where('is_admin', false)->paginate(5)->toArray();
+        $users = User::where('is_admin', false)
+            ->filterBy($request->all());
 
         return response()->json([
-            $users,
+            $this->parseQuery($users, $request),
         ], Response::HTTP_OK);
     }
 
