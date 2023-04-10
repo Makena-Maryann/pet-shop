@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit;
+namespace Tests\Feature\Auth;
 
 use Mockery;
 use DateTimeImmutable;
@@ -37,7 +37,7 @@ class TokenVerificationTest extends TestCase
         $this->canOnlyBeUsedAfter = new DateTimeImmutable();
 
         // Load public key from file
-        $keyFile  = dirname(dirname(__DIR__)) . '/storage/app/jwt/public.pem';
+        $keyFile  = storage_path('app/jwt/public.pem');
         $keyContents = file_get_contents($keyFile);
 
         if (!$keyContents) {
@@ -47,7 +47,7 @@ class TokenVerificationTest extends TestCase
         $this->publicKey = InMemory::plainText($keyContents);
 
         // Load private key from file
-        $keyFile  = dirname(dirname(__DIR__)) . '/storage/app/jwt/private.pem';
+        $keyFile  = storage_path('app/jwt/private.pem');
         $keyContents = file_get_contents($keyFile);
 
         if (!$keyContents) {
