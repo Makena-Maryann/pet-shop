@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\v1;
+namespace App\Http\Controllers\Api\v1;
 
+use App\Models\v1\Order;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreOrderStatusRequest;
-use App\Http\Requests\UpdateOrderStatusRequest;
-use App\Models\v1\OrderStatus;
+use App\Http\Requests\StoreOrderRequest;
+use App\Http\Requests\UpdateOrderRequest;
 
-class OrderStatusController extends Controller
+class OrderController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -20,7 +20,7 @@ class OrderStatusController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreOrderStatusRequest $request)
+    public function store(StoreOrderRequest $request)
     {
         //
     }
@@ -28,7 +28,7 @@ class OrderStatusController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(OrderStatus $orderStatus)
+    public function show(Order $order)
     {
         //
     }
@@ -36,7 +36,7 @@ class OrderStatusController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateOrderStatusRequest $request, OrderStatus $orderStatus)
+    public function update(UpdateOrderRequest $request, Order $order)
     {
         //
     }
@@ -44,7 +44,7 @@ class OrderStatusController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(OrderStatus $orderStatus)
+    public function destroy(Order $order)
     {
         //
     }

@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\v1;
+namespace App\Http\Controllers\Api\v1;
 
-use App\Models\v1\User;
+use App\Models\v1\Payment;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreUserRequest;
-use App\Http\Requests\UpdateUserRequest;
+use App\Http\Requests\StorePaymentRequest;
+use App\Http\Requests\UpdatePaymentRequest;
 
-class UserController extends Controller
+class PaymentController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -20,7 +20,7 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreUserRequest $request)
+    public function store(StorePaymentRequest $request)
     {
         //
     }
@@ -28,7 +28,7 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(User $user)
+    public function show(Payment $payment)
     {
         //
     }
@@ -36,7 +36,7 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateUserRequest $request, User $user)
+    public function update(UpdatePaymentRequest $request, Payment $payment)
     {
         //
     }
@@ -44,7 +44,7 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(User $user)
+    public function destroy(Payment $payment)
     {
         //
     }

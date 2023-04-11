@@ -18,13 +18,13 @@ class UserSeeder extends Seeder
             'last_name' => 'Admin',
             'is_admin' => true,
             'email' => 'admin@buckhill.co.uk',
-            'password' => Hash::make('admin'),
+            'password' => 'admin',
             'email_verified_at' => now(),
             'address' => 'Remetinečka cesta 13 10 000 Zagreb, Croatia',
             'phone_number' => '01284 810 810',
             'is_marketing' => true,
         ]);
 
-        User::factory()->count(10)->create();
+        User::factory()->count(20)->create();
     }
 }

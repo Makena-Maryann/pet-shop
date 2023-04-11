@@ -7,6 +7,7 @@ use Spatie\Sluggable\SlugOptions;
 use Illuminate\Database\Eloquent\Model;
 use Dyrynda\Database\Support\GeneratesUuid;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Product extends Model
@@ -37,17 +38,17 @@ class Product extends Model
             ->saveSlugsTo('slug');
     }
 
-    public function category()
+    public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
     }
 
-    public function getMetadataAttribute($value)
+    public function getMetadataAttribute($value): array
     {
         return json_decode($value);
     }
 
-    public function setMetadataAttribute($value)
+    public function setMetadataAttribute($value): void
     {
         $this->attributes['metadata'] = json_encode($value);
     }
