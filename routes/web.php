@@ -17,4 +17,8 @@ Route::get('/', function () {
     return ['Laravel' => app()->version()];
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
+
+Route::get('inspire', function (Fhsinchy\Inspire\Inspire $inspire) {
+    return $inspire->justDoIt();
+});
