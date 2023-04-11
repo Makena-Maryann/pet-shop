@@ -62,7 +62,7 @@ To test the API endpoints, run the command below to generate the documentation.
 
 You can now access the documentation at `http://localhost:8000/api/documentation`
 
-## User Credentials
+## Admin Credentials
 
 To login as an admin, use the following credentials:
 
