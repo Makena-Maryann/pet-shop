@@ -187,6 +187,7 @@ return [
         /*
          * Package Service Providers...
          */
+        MakenaMaryann\CurrencyExchangeRate\Providers\CurrencyExchangeProvider::class,
 
         /*
          * Application Service Providers...

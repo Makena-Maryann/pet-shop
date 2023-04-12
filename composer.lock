@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "96e82df26f9cb979aefdcc7a4e4428c7",
+    "content-hash": "0cba301178a5aacd23689f744e774505",
     "packages": [
         {
             "name": "brick/math",
@@ -2003,6 +2003,39 @@
                 }
             ],
             "time": "2022-04-17T13:12:02+00:00"
+        },
+        {
+            "name": "makena-maryann/currency-exchange-rate",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Makena-Maryann/currency-exchange-rate.git",
+                "reference": "e2987f84f33bf7eea89f28157c5ce7710c187f89"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Makena-Maryann/currency-exchange-rate/zipball/e2987f84f33bf7eea89f28157c5ce7710c187f89",
+                "reference": "e2987f84f33bf7eea89f28157c5ce7710c187f89",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "MakenaMaryann\\CurrencyExchangeRate\\": "src/"
+                }
+            },
+            "authors": [
+                {
+                    "name": "Makena-Maryann",
+                    "email": "maryann.makena00@gmail.com"
+                }
+            ],
+            "description": "This package returns the exchange rate for a given amount and currency.",
+            "support": {
+                "source": "https://github.com/Makena-Maryann/currency-exchange-rate/tree/1.0.0",
+                "issues": "https://github.com/Makena-Maryann/currency-exchange-rate/issues"
+            },
+            "time": "2023-04-10T19:45:37+00:00"
         },
         {
             "name": "monolog/monolog",
